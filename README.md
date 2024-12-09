@@ -4,7 +4,7 @@
   <img src="./public/screen.png" alt="Captura de pantalla" style="max-width: 800px; width: 100%;" />
 </div>
 
-Mira el proyecto [aquí](https://www.tu-dominio.com)
+Mira el proyecto <a href="https://www.tu-dominio.com" target="_blank">aquí</a>
 
 ## Tecnologías utilizadas
 
