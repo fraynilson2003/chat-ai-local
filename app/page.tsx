@@ -4,8 +4,6 @@ import { Link } from "@nextui-org/link";
 
 import { title, subtitle } from "@/components/primitives";
 
-export const runtime = "edge";
-
 export default function Home() {
   return (
     <section className="mx-auto flex flex-col items-center justify-center gap-4 py-8 md:py-10">

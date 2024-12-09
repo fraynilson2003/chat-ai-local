@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import ChatLocal from "@/components/ChatLocal";
 import { title } from "@/components/primitives";
 
-export const runtime = "edge";
-
 export default function AboutPage() {
   const [mounted, setMounted] = useState(false);
 
