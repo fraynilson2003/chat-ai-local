@@ -5,14 +5,24 @@ import {
   CreateWebWorkerMLCEngine,
   InitProgressCallback,
   MLCEngineInterface,
+  ModelRecord,
+  prebuiltAppConfig,
 } from "@mlc-ai/web-llm";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useEffect, useState } from "react";
 import { Spinner } from "@nextui-org/spinner";
+import { Select, SelectItem } from "@nextui-org/select";
 
 import MessagesAI from "./MessagesAI";
 import { subtitle } from "./primitives";
+import { Mode } from "fs";
+
+interface ModelSelect extends Partial<ModelRecord> {
+  model: string;
+  model_id: string;
+  vram_required_MB?: number;
+}
 
 export default function ChatLocal() {
   const [progress, setProgress] = useState<string>("Esperando...");
@@ -28,6 +38,33 @@ export default function ChatLocal() {
     },
   ]);
   const [valueInput, setValueInput] = useState<string>("");
+
+  const models = prebuiltAppConfig.model_list;
+  const KEY_MODEL_LOCALSTORAGE = "modelAI";
+
+  const [selectModel, setSelectModel] = useState<ModelSelect>(
+    localStorage.getItem(KEY_MODEL_LOCALSTORAGE)
+      ? (JSON.parse(
+          localStorage.getItem(KEY_MODEL_LOCALSTORAGE) as string
+        ) as ModelSelect)
+      : {
+          model:
+            "https://huggingface.co/mlc-ai/Llama-3.2-1B-Instruct-q4f16_1-MLC",
+          model_id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",
+          vram_required_MB: 879.04,
+        }
+  );
+
+  const changeModel = (modelId: ModelSelect["model_id"]) => {
+    const findModel = models.find((model) => model.model_id === modelId);
+
+    if (findModel) {
+      setSelectModel(findModel);
+    }
+
+    localStorage.setItem(KEY_MODEL_LOCALSTORAGE, JSON.stringify(findModel));
+    createEngine(modelId);
+  };
 
   const handlerResetChat = () => {
     setMessages([
@@ -96,19 +133,17 @@ export default function ChatLocal() {
     }
   };
 
-  const createEngine = async () => {
+  const createEngine = async (modelId: string) => {
+    setEngine(undefined);
     const initProgressCallback: InitProgressCallback = (initProgress) => {
       setProgress(initProgress.text);
     };
-
-    // const selectedModel = "gemma-2b-it-q4f16_1-MLC";
-    const selectedModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC";
 
     const create = await CreateWebWorkerMLCEngine(
       new Worker("/worker.js", {
         type: "module",
       }),
-      selectedModel,
+      modelId,
       { initProgressCallback } // engineConfig
     );
 
@@ -116,8 +151,28 @@ export default function ChatLocal() {
   };
 
   useEffect(() => {
+    const findModelDefault = localStorage.getItem(KEY_MODEL_LOCALSTORAGE);
+    let modelDefault: ModelSelect | undefined = undefined;
+
+    if (findModelDefault) {
+      const model: ModelSelect = JSON.parse(findModelDefault);
+
+      modelDefault = model;
+      setSelectModel(model);
+    } else {
+      const model: ModelSelect = {
+        model:
+          "https://huggingface.co/mlc-ai/Llama-3.2-1B-Instruct-q4f16_1-MLC",
+        model_id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",
+        vram_required_MB: 879.04,
+      };
+
+      modelDefault = model;
+      setSelectModel(model);
+    }
+
     const handler = async () => {
-      await createEngine();
+      await createEngine(modelDefault.model_id);
     };
 
     handler();
@@ -125,14 +180,38 @@ export default function ChatLocal() {
 
   return (
     <div className="flex flex-1 flex-col w-full gap-4">
-      <div className="flex gap-4 justify-end mt-6">
-        <Button className="bg-red-800" size="sm" onPress={() => createEngine()}>
+      <div className=" flex justify-start items-center h-8 gap-4  mt-6 lg:justify-end">
+        {/* <Button
+          className="bg-red-500/80  border-2"
+          size="sm"
+          variant="bordered"
+          onPress={() => createEngine()}
+        >
           Reiniciar carga del modelo
-        </Button>
+        </Button> */}
 
-        <Button size="sm" onPress={() => handlerResetChat()}>
+        <Button
+          className="px-2"
+          radius="sm"
+          size="sm"
+          onPress={() => handlerResetChat()}
+        >
           Reiniciar chat
         </Button>
+        <Select
+          className="flex-1 lg:max-w-xs"
+          defaultSelectedKeys={[selectModel.model_id]}
+          placeholder="Selecciona el modelo"
+          size="sm"
+          value={selectModel.model_id}
+          onChange={(e) => changeModel(String(e.target.value).trim())}
+        >
+          {models.map((model, i) => (
+            <SelectItem key={model.model_id} value={model.model_id}>
+              {model.model_id}
+            </SelectItem>
+          ))}
+        </Select>
       </div>
 
       {/* caja de texto */}
