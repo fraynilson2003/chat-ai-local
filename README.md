@@ -3,7 +3,10 @@
 <div style="text-align: center;">
   <img src="./public/screen.png" alt="Captura de pantalla" style="max-width: 800px; width: 100%;" />
 </div>
-## Technologies Used
+
+Mira el proyecto [aquí](https://www.tu-dominio.com)
+
+## Tecnologías utilizadas
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
 - [NextUI v2](https://nextui.org/)
@@ -13,23 +16,23 @@
 - [Framer Motion](https://www.framer.com/motion/)
 - [next-themes](https://github.com/pacocoursey/next-themes)
 
-### Install dependencies
+### Instalar dependencias
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+Puedes usar uno de estos gestores de paquetes: `npm`, `yarn`, `pnpm`, `bun`. Ejemplo usando `npm`:
 
 ```bash
 npm install
 ```
 
-### Run the development server
+### Ejecutar el servidor de desarrollo
 
 ```bash
 npm run dev
 ```
 
-### Setup pnpm (optional)
+### Configurar pnpm (opcional)
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+Si estás utilizando pnpm, necesitas agregar el siguiente código a tu archivo .npmrc::
 
 ### FTT
 

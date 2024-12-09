@@ -42,18 +42,11 @@ export default function ChatLocal() {
   const models = prebuiltAppConfig.model_list;
   const KEY_MODEL_LOCALSTORAGE = "modelAI";
 
-  const [selectModel, setSelectModel] = useState<ModelSelect>(
-    localStorage.getItem(KEY_MODEL_LOCALSTORAGE)
-      ? (JSON.parse(
-          localStorage.getItem(KEY_MODEL_LOCALSTORAGE) as string
-        ) as ModelSelect)
-      : {
-          model:
-            "https://huggingface.co/mlc-ai/Llama-3.2-1B-Instruct-q4f16_1-MLC",
-          model_id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",
-          vram_required_MB: 879.04,
-        }
-  );
+  const [selectModel, setSelectModel] = useState<ModelSelect>({
+    model: "https://huggingface.co/mlc-ai/Llama-3.2-1B-Instruct-q4f16_1-MLC",
+    model_id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",
+    vram_required_MB: 879.04,
+  });
 
   const changeModel = (modelId: ModelSelect["model_id"]) => {
     const findModel = models.find((model) => model.model_id === modelId);
@@ -62,7 +55,7 @@ export default function ChatLocal() {
       setSelectModel(findModel);
     }
 
-    localStorage.setItem(KEY_MODEL_LOCALSTORAGE, JSON.stringify(findModel));
+    localStorage.setItem(KEY_MODEL_LOCALSTORAGE, modelId);
     createEngine(modelId);
   };
 
@@ -151,14 +144,14 @@ export default function ChatLocal() {
   };
 
   useEffect(() => {
-    const findModelDefault = localStorage.getItem(KEY_MODEL_LOCALSTORAGE);
+    const defaultModelStorage = localStorage.getItem(KEY_MODEL_LOCALSTORAGE);
     let modelDefault: ModelSelect | undefined = undefined;
 
-    if (findModelDefault) {
-      const model: ModelSelect = JSON.parse(findModelDefault);
-
-      modelDefault = model;
-      setSelectModel(model);
+    if (defaultModelStorage) {
+      modelDefault = models.find(
+        (model) => model.model_id === defaultModelStorage
+      );
+      setSelectModel(modelDefault!);
     } else {
       const model: ModelSelect = {
         model:
@@ -172,7 +165,7 @@ export default function ChatLocal() {
     }
 
     const handler = async () => {
-      await createEngine(modelDefault.model_id);
+      await createEngine(modelDefault!.model_id);
     };
 
     handler();
@@ -181,16 +174,8 @@ export default function ChatLocal() {
   return (
     <div className="flex flex-1 flex-col w-full gap-4">
       <div className=" flex justify-start items-center h-8 gap-4  mt-6 lg:justify-end">
-        {/* <Button
-          className="bg-red-500/80  border-2"
-          size="sm"
-          variant="bordered"
-          onPress={() => createEngine()}
-        >
-          Reiniciar carga del modelo
-        </Button> */}
-
         <Button
+          aria-label="Reiniciar chat"
           className="px-2"
           radius="sm"
           size="sm"
@@ -199,11 +184,11 @@ export default function ChatLocal() {
           Reiniciar chat
         </Button>
         <Select
+          aria-label="Selecciona un modelo de IA"
           className="flex-1 lg:max-w-xs"
-          defaultSelectedKeys={[selectModel.model_id]}
           placeholder="Selecciona el modelo"
+          selectedKeys={[selectModel.model_id]}
           size="sm"
-          value={selectModel.model_id}
           onChange={(e) => changeModel(String(e.target.value).trim())}
         >
           {models.map((model, i) => (
