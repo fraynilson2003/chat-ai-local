@@ -24,8 +24,6 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/nextui-org/nextui",
-    twitter: "https://twitter.com/getnextui",
-    discord: "https://discord.gg/9b6yyZKmH4",
+    github: "https://github.com/fraynilson2003/chat-ai-local",
   },
 };

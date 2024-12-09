@@ -1,5 +1,8 @@
-# CHAT IA LOCAL
+<h1 style="text-align: center;">CHAT IA LOCAL</h1>
 
+<div style="text-align: center;">
+  <img src="./public/screen.png" alt="Captura de pantalla" style="max-width: 800px; width: 100%;" />
+</div>
 ## Technologies Used
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
@@ -27,3 +30,9 @@ npm run dev
 ### Setup pnpm (optional)
 
 If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+
+### FTT
+
+<div style="text-align: center;">
+  <img src="./public/black_on_white.png" alt="Captura de pantalla" style="max-width: 300px; width: 100%;" />
+</div>
