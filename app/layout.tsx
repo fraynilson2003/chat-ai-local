@@ -47,9 +47,9 @@ export default function RootLayout({
             <main className="mx-auto px-6 w-full  flex-1">{children}</main>
             <footer className="w-full flex items-center justify-center py-3">
               <Link
-                target="_blank"
                 className="flex items-center gap-1 text-current"
                 href="https://github.com/fraynilson2003"
+                target="_blank"
                 title="nextui.org homepage"
               >
                 <span className="text-default-600">

@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Chat AI local",
+  name: "Chat IA local",
   description: "Chat de inteligencia artificial local, sin internet",
   navItems: [
     {
